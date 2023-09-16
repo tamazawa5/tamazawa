@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        body {font-family: Arial;}
+
+        /* Style the tab */
+        .tab {
+        overflow: hidden;
+        border: 1px solid #f307df;
+        background-color: #f4f5f5;
+        }
+
+        /* Style the buttons inside the tab */
+        .tab button {
+        background-color: inherit;
+        float: left;
+        border: none;
+        outline: none;
+        cursor: pointer;
+        padding: 14px 16px;
+        transition: 0.3s;
+        font-size: 16px;
+        }
+
+        /* Change background color of buttons on hover */
+        .tab button:hover {
+        background-color: #f00202;
+        }
+
+        /* Create an active/current tablink class */
+        .tab button.active {
+        background-color: #ffffff;
+        }
+
+        /* Style the tab content */
+        .tabcontent {
+        display: none;
+        padding: 6px 12px;
+        border: 1px solid #f829a9;
+        border-top: none;
+        }
+
+        table, th, td {
+            border:1px solid rgb(27, 122, 245);
+        }
+    </style>
+</head>
+<body>
+    <div class="tab">
+        <button class="tablinks" onclick="openTab(event, 'Register')">Register</button>
+        <button class="tablinks" onclick="openTab(event, 'List')">List Peserta</button>
+      </div>
+
+      <div id="Register" class="tabcontent">
+        <h3>Register Peserta</h3>
+        <form id="student_form">
+          <label for="name">Nama:</label>
+          <input type="text" id="nama" name="nama" minlength="10" required /><br />
+          <br />
+          <label for="age">Umur:</label>
+          <input type="number" id="umur" name="umur" min="25" required /><br />
+          <br />
+          <label for="money">Uang Saku:</label>
+          <input type="number" id="uangSaku" name="uangSaku" min="100000" max="1000000" required /><br />
+          <br />
+          <button type="button" value="Submit" onclick="setAction()">Submit</button>
+        </form>
+      </div>
+      
+      <div id="List" class="tabcontent">
+        <h3>List Peserta</h3>
+        <div id="empTable">
+        </div>
+      </div>      
+
+      <script>
+        // create students array
+        let arrStudents = []
+        
+        // function Student(firstname, lastname){
+            
+        // }
+
+        class Student {
+            constructor(nama, umur, uangSaku) {
+                this.nama = nama
+                this.umur = umur
+                this.uangSaku = uangSaku
+            }
+        }
+
+        function openTab(evt, cityName) {
+            showTableData()
+            var i, tabcontent, tablinks;
+            tabcontent = document.getElementsByClassName("tabcontent");
+            for (i = 0; i < tabcontent.length; i++) {
+                tabcontent[i].style.display = "none";
+            }
+            tablinks = document.getElementsByClassName("tablinks");
+            for (i = 0; i < tablinks.length; i++) {
+                tablinks[i].className = tablinks[i].className.replace(" active", "");
+            }
+            document.getElementById(cityName).style.display = "block";
+            evt.currentTarget.className += " active";
+        }
+
+        async function setAction(form) {
+            let nama = document.getElementById("nama").value
+            let umur = document.getElementById("umur").value
+            let uangSaku = document.getElementById("uangSaku").value
+
+            if(nama.length < 10){
+                alert("Nama harus lebih dari 10 karakter")
+                return;
+            }
+            if(umur < 25){
+                alert("Umur harus lebih dari 25")
+                return;
+            }
+            if(uangSaku < 100000 || uangSaku > 1000000){
+                alert("Uang saku harus antara 100 ribu dan satu juta")
+                return;
+            }
+            
+            let newStudent = await new Student(nama, umur, uangSaku)
+            await arrStudents.push({nama: newStudent.nama, umur: newStudent.umur, uangSaku: newStudent.uangSaku})
+        }
+
+        function showTableData() {
+            var outputHTML = ""
+            outputHTML += "<table border='2px' width='400'>";
+
+            outputHTML += '<tr><td> Nama </td> <td> Umur <td> Uang Saku </td></tr>';
+            console.log(arrStudents)
+            for (let i = 0; i < arrStudents.length; i++) {
+                console.log(arrStudents[i].nama)
+                outputHTML += '<tr><td>' + arrStudents[i].nama + '</td>'  + '<td>' + arrStudents[i].umur + '<td>' + arrStudents[i].uangSaku + '</td></tr>';
+            }
+
+            outputHTML += "</table>";
+
+            document.getElementById("empTable").innerHTML = outputHTML;
+            
+        }
+
+        
+        </script>
+</body>
+</html>
